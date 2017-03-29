@@ -14,14 +14,12 @@ public class chitchatjavaClient extends javax.swing.JFrame {
     private String msg;
 
     public chitchatjavaClient() {
-
         initComponents();
     }
 
     public void connectServer() {
         String ip = tf_ip.getText();
         int port = Integer.parseInt(tf_port.getText());
-        String name = tf_name.getText();
 
         try {
             //step 1 connect to server
@@ -38,7 +36,7 @@ public class chitchatjavaClient extends javax.swing.JFrame {
 //            msg = in.readLine();
 //            System.out.println("Server echo: " + msg);
             //step 4 close
-            //    s.close();
+            s.close();
         } catch (IOException ioe) {
             System.out.println(ioe.getMessage());
         }
@@ -46,14 +44,39 @@ public class chitchatjavaClient extends javax.swing.JFrame {
 
     public void sendMessage() {
         String name = tf_name.getText();
+        String message = tf_message.getText();
 
         try {
-
             //step 3 process
-            out.println(name + "Hello");
+            out.println("" + name + message);
             out.flush(); //ดันให้หมดท่อ (ไม่มีอะไรค้างในท่อ)
             msg = in.readLine();
             System.out.println("Server echo: " + msg);
+
+        } catch (IOException ioe) {
+            System.out.println(ioe.getMessage());
+        }
+    }
+
+    public void tests() {
+
+        try {
+            //step 1 connect to server
+            //localhost
+            s = new Socket("localhost", 8888); //จะวิ่งไปที่ step 2 ของ server ที่รออยู่เพื่อทำงานต่อ
+
+            //step 2 create input and output
+            in = new BufferedReader(new InputStreamReader(s.getInputStream()));  //byte to character to buffered
+            out = new PrintWriter(s.getOutputStream()); //byte to character
+
+            //step 3 process
+            out.println("Hello");
+            out.flush(); //ดันให้หมดท่อ (ไม่มีอะไรค้างในท่อ)
+            msg = in.readLine();
+            System.out.println("Server echo: " + msg);
+
+            //step 4 close
+            s.close();
 
         } catch (IOException ioe) {
             System.out.println(ioe.getMessage());
@@ -73,7 +96,7 @@ public class chitchatjavaClient extends javax.swing.JFrame {
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
         bt_send = new javax.swing.JButton();
-        jTextField1 = new javax.swing.JTextField();
+        tf_message = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -120,7 +143,7 @@ public class chitchatjavaClient extends javax.swing.JFrame {
                             .addComponent(tf_name, javax.swing.GroupLayout.PREFERRED_SIZE, 178, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(67, 67, 67)
-                        .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(tf_message, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(bt_send)))
                 .addContainerGap(103, Short.MAX_VALUE))
@@ -146,12 +169,13 @@ public class chitchatjavaClient extends javax.swing.JFrame {
                 .addComponent(jLabel4)
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(tf_message, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(bt_send))
                 .addContainerGap(53, Short.MAX_VALUE))
         );
 
         pack();
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
@@ -159,7 +183,8 @@ public class chitchatjavaClient extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void bt_sendActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bt_sendActionPerformed
-        // TODO add your handling code here:
+        //sendMessage();
+        tests();
     }//GEN-LAST:event_bt_sendActionPerformed
 
     /**
@@ -204,8 +229,8 @@ public class chitchatjavaClient extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
-    private javax.swing.JTextField jTextField1;
     private javax.swing.JTextField tf_ip;
+    private javax.swing.JTextField tf_message;
     private javax.swing.JTextField tf_name;
     private javax.swing.JTextField tf_port;
     // End of variables declaration//GEN-END:variables
